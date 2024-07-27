@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Image Search</title>
+    <style>
+        .images-span{
+            color: #4487f6;
+            font: 16px/16px roboto-regular, arial, sans-serif;
+            position: absolute;
+            bottom: 6px;
+            left: 215px;
+        }
+        *{
+            margin:0px;
+            padding:0px;
+            /* the width and height of an element are calculated based on the content inside the element. */
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            background-color: #202124;
+        }
+
+        .container{
+            display: flex;
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo-and-images{
+            position:relative;
+        }
+
+        .links{
+            display: flex;
+            width: 100%;
+            justify-content:flex-end;
+           height: 52px;
+        }
+
+        .links a{
+            padding-right: 15px;
+            text-decoration: none;
+            color: white;
+            padding-left:15px;    
+            padding-top: 15px;            
+            font-size: 80%;
+        }
+        
+        .searchbar{
+            margin-top: 20px;
+            border-radius: 25px;
+            border: 1px solid #5f6368;
+            background: #202124;
+            /* padding: 15px 10px 14px 28px; */
+            /* width: 45vw; */
+            color: #dadde8;
+            position: relative;
+            display: flex;
+            flex-wrap: wrap;
+
+        }
+
+        #searchicon{
+            margin:10px 20px 10px 20px;
+            width: 20px;
+            height: 20px;
+        }
+
+        .searchbar #inputfield{
+            background: #202124;
+            color: #dadde8;
+            margin-right: 9px;
+            width: 37vw;
+            border: 0;
+            font-size: 16px;
+            position: relative;
+            bottom: 14px;
+            height: 18px;
+            left: 22px;
+        }
+
+        .searchbar:hover {
+            box-shadow: 0px 1px 2px 0.3px rgb(20, 20, 20) ;
+                background: #303134;
+                border: 0;
+                outline: 0;
+        }
+
+        .searchbar:hover #inputfield {
+            background: #303134;
+                border: 0;
+                outline: 0;
+        }
+
+
+        .searchbar:focus-within {
+            box-shadow: 0px 1px 2px 0.3px rgb(20, 20, 20) ;
+                background: #303134;
+                border: 0;
+                outline: 0;
+        }
+
+        #inputfield:focus{
+            background: #303134;
+                border: 0;
+                outline: 0;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="links"><a href="index.html">Google Search</a></div>
+        <div class="logo-and-images">
+            <img src="logo.png" alt="Google-Logo">
+            <span class="images-span">images</span>
+        </div>
+        <div class="searchbar">
+            <form action="https://www.google.com/search">
+                <input type="text" name="q" id="inputfield">
+                <input type="hidden" name="tbm" value="isch" >
+                <input id="searchicon" type="image" src="search-icon.png" alt="Search Button">
+            </form>
+        </div>
+    </div>
+    
+</body>
+</html>

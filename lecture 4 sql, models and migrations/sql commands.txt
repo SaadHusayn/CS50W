@@ -1,0 +1,110 @@
+C:\Users\s tech\OneDrive - FAST National University\Desktop\programming\cs50 web\lecture 4 sql, models and migrations>sqlite3 flights.sql
+SQLite version 3.44.0 2023-11-01 11:23:50
+Enter ".help" for usage hints.
+sqlite> CREATE TABLE flights (
+(x1...>   id INTEGER PRIMARY KEY AUTOINCREMENT,
+(x1...>   origin TEXT NOT NULL,
+(x1...>   destination TEXT NOT NULL,
+(x1...>   duration INTEGER NOT NULL
+(x1...> );
+                                      error here ---^
+sqlite> INSERT INTO flights (origin, destination, duration) VALUES ("New York", "London", 415);
+Parse error: no such column: New York
+  O flights (origin, destination, duration) VALUES ("New York", "London", 415);
+                                      error here ---^
+sqlite> INSERT INTO flights (origin, destination, duration) VALUES ("New York", "London", 415);
+Parse error: no such column: New York
+  O flights (origin, destination, duration) VALUES ("New York", "London", 415);
+                                      error here ---^
+sqlite> INSERT INTO flights (origin, destination, duration) VALUES ('New York', 'London', 415);
+sqlite> SELECT * FROM flights;
+1|New York|London|415
+<(origin, destination, duration) VALUES ('Istanbul', 'Tokyo', 700);
+<(origin, destination, duration) VALUES ('New York', 'Paris', 435);
+<(origin, destination, duration) VALUES ('Moscow', 'Paris', 245);
+<(origin, destination, duration) VALUES ('Lima', 'New York', 455);
+sqlite> SELECT * FROM flights
+   ...>
+   ...>
+   ...> ;
+1|New York|London|415
+2|Istanbul|Tokyo|700
+3|New York|Paris|435
+4|Moscow|Paris|245
+5|Lima|New York|455
+sqlite> INSERT INTO flights (origin, destination, duration) VALUES ('Shanghai', 'Paris', 760);   
+sqlite> .mode columns
+sqlite> .headers yes
+sqlite> SELECT * FROM flights;
+id  origin    destination  duration
+--  --------  -----------  --------
+1   New York  London       415
+2   Istanbul  Tokyo        700
+3   New York  Paris        435
+4   Moscow    Paris        245
+5   Lima      New York     455
+6   Shanghai  Paris        760
+sqlite> SELECT * FROM flights WHERE origin = "New York";
+Parse error: no such column: New York
+  SELECT * FROM flights WHERE origin = "New York";
+                         error here ---^
+sqlite> SELECT * FROM flights WHERE origin = 'New York';
+id  origin    destination  duration
+--  --------  -----------  --------
+1   New York  London       415
+3   New York  Paris        435
+sqlite> SELECT * FROM flights WHERE duration > 500 OR destination IN ('London', 'Paris'); 
+id  origin    destination  duration
+--  --------  -----------  --------
+1   New York  London       415
+2   Istanbul  Tokyo        700
+3   New York  Paris        435
+4   Moscow    Paris        245
+6   Shanghai  Paris        760
+sqlite> SELECT * FROM flights;
+id  origin    destination  duration
+--  --------  -----------  --------
+1   New York  London       415
+2   Istanbul  Tokyo        700
+3   New York  Paris        435
+4   Moscow    Paris        245
+5   Lima      New York     455
+6   Shanghai  Paris        760
+sqlite> SELECT * FROM flights WHERE origin LIKE '%u%'
+   ...> ;
+id  origin    destination  duration
+--  --------  -----------  --------
+2   Istanbul  Tokyo        700
+sqlite> SELECT * FROM flights
+   ...> ;
+id  origin    destination  duration
+--  --------  -----------  --------
+1   New York  London       415
+2   Istanbul  Tokyo        700
+3   New York  Paris        435
+4   Moscow    Paris        245
+5   Lima      New York     455
+6   Shanghai  Paris        760     
+sqlite> UPDATE flights
+   ...>   SET duration = 450
+   ...>   WHERE origin = 'New York'    
+   ...>   AND destination = 'London';
+sqlite> SELECT * FROM flights;       
+id  origin    destination  duration
+--  --------  -----------  --------
+1   New York  London       450
+2   Istanbul  Tokyo        700
+3   New York  Paris        435
+4   Moscow    Paris        245
+5   Lima      New York     455
+6   Shanghai  Paris        760
+sqlite> DELETE FROM flights WHERE id = 6;
+sqlite> SELECT * FROM flights;
+id  origin    destination  duration
+--  --------  -----------  --------
+1   New York  London       450
+2   Istanbul  Tokyo        700
+3   New York  Paris        435
+4   Moscow    Paris        245
+5   Lima      New York     455
+sqlite>    

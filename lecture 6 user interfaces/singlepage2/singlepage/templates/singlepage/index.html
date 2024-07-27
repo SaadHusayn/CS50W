@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Single Page</title>
+
+    <script>
+
+        //when user click on back button
+        window.onpopstate = function(event){
+            console.log(event.state.section);
+            showSection(event.state.section);
+        }
+
+        function showSection(sectionNumber){
+
+            fetch(`/sections/${sectionNumber}`)
+            .then(response => response.text())
+            .then(text => document.querySelector('#content').innerHTML = text);
+
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('button').forEach(button => {
+                button.onclick = function(){
+                    const section = this.dataset.section;
+                    //add url in history
+                    history.pushState({section: section}, "", `section${section}`);
+                    showSection(section);
+                }
+            })
+        })
+
+    </script>
+
+</head>
+<body>
+    <h1>Hello</h1>
+
+    <button data-section="1">Section 1</button>
+    <button data-section="2">Section 2</button>
+    <button data-section="3">Section 3</button>
+
+    <div id="content">
+
+    </div>
+</body>
+</html>

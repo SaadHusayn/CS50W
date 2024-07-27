@@ -1,0 +1,9 @@
+$liColor: red;
+div{
+    p{
+        color:orange;
+    }
+    li{
+        color:$liColor;
+    }
+}
