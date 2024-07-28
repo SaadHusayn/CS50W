@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hide</title>
+
+    <style>
+
+        @keyframes hide{
+            0%{
+                opacity: 1;
+            }
+            100%{
+                opacity: 0;
+            }
+        }
+
+        .post{
+            border: 1px solid black;
+            padding: 10px;
+            background-color: aqua;
+            margin:10px;
+            width: auto;
+            animation-name: hide;
+            animation-duration: 2s;
+            animation-fill-mode: forwards;
+            animation-play-state: paused;
+        }
+
+        .hide{
+            float: right;
+        }
+
+    </style>
+
+    <script>
+        // start with first post
+        let counter = 1;
+
+        // load 20 posts at a time
+        const quantity = 20;
+
+        // when dom content is loaded, render first 20 posts
+        document.addEventListener('DOMContentLoaded', load);
+
+        // add posts to DOM automatically when user has reached end of webpage
+        window.onscroll = () => {
+            if(window.scrollY + window.innerHeight >= document.body.offsetHeight){
+                //user has reached end of the webpage
+                load();
+            }
+        }
+
+        document.addEventListener('click', event => {
+            const element = event.target;
+            if(element.className === 'hide'){
+                element.parentElement.style.animationPlayState = 'running';
+                element.parentElement.addEventListener('animationend', () => {
+                    element.parentElement.remove();
+                });
+            }
+        });
+
+        // load next set of posts
+        function load(){
+
+            // set start and end posts numbers, and update the counter
+            const start = counter;
+            const end = start + quantity - 1;
+            counter = end + 1;
+
+            //Get new posts and add posts
+            fetch(`/posts?start=${start}&end=${end}`)
+            .then(response => response.json())
+            .then(data => {
+                data.posts.forEach(add_posts);
+            })
+
+            // add new post on DOM with given contents
+            function add_posts(contents){
+
+                //create new post
+                const post = document.createElement('div');
+                post.className = 'post';
+                post.innerHTML = `${contents} <button class="hide">Hide</button>`;
+
+                // add post to DOM
+                document.querySelector('#posts').append(post);
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="posts">
+
+    </div>
+</body>
+</html>
