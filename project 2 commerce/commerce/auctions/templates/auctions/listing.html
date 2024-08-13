@@ -1,0 +1,186 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+
+
+
+<div class="container my-5">
+    <div class="row g-3">
+        <div class="col-lg-6 col-12">
+            <div class="d-flex align-items-center justify-content-center ">
+                {% if listing.image %}
+                    <img src="{{listing.image.url}}" alt="{{listing.title}}" class="img-fluid rounded-2">
+                {% else %}
+                    <img src="{% static 'auctions/default.png' %}" alt="{{listing.title}}" class="img-fluid rounded-2">
+                {% endif %}
+             </div>
+        </div>
+
+        <div class="col-lg-6 col-12 heading">
+            
+            <h1 class="  pb-2 border-bottom ">{{listing.title}}</h3>
+            
+<!-- watchlist button starts -->
+            
+            
+            {% if user.is_authenticated %}
+                <form action="{% url 'auctions:watchlist' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="listing_id" value="{{listing.id}}">
+                {% if watchlisted %}
+                    <input type="hidden" name="pleaseWatchlist" value="0">
+                    <input class="btn btn-sm btn-outline-warning" type="submit" value="Remove From Watchlist">
+                {% else %}
+                    <input type="hidden" name="pleaseWatchlist" value="1">
+                    <input class="btn btn-sm btn-outline-warning" type="submit" value="Watchlist">
+                {% endif %}
+                </form>
+            {% endif %}
+
+<!-- watchlist button ends -->
+
+
+            {% if listing.isListingOpen %}
+
+            <h3 class="my-2 text-warning">${{listing.bidCurrentPrice}}</h3>
+        
+            {% if user.is_authenticated %}
+                
+                {% if currentBidder %}
+                    <p class="my-2">{{numBids}} bid(s) so far. <a class="hover-effect text-decoration-none" href="{% url 'auctions:userProfile' currentBidder.username %}">{{currentBidder}}</a> bid is the current bid</p>
+                {% else %}
+                    <p class="my-2">{{numBids}} bid(s) so far.</p>
+                {% endif %}
+        
+                {% if creatorIsViewingTheList %}
+        
+                    <form action="{% url 'auctions:listing' listing.id %}" method="post">
+                        {% csrf_token %}
+                        <input class="btn btn-outline-warning my-2"  type="submit" value="Close">
+                        <input type="hidden" name="isBidingForm" value="0">
+                    </form>
+        
+                {% else %}
+        
+                    <form action="{% url 'auctions:listing' listing.id%}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="isBidingForm" value="1">
+                        
+                        
+
+                        <div class="input-group my-2">
+                            <input type="number" min="0" step="0.01" name="bidPrice" class="form-control" placeholder="Bid" aria-label="Bid" aria-describedby="button-addon2">
+                            <button class="btn btn-outline-warning" type="submit" id="button-addon2">Place Bid</button>
+                        </div>
+                        
+                        {% if message %}
+                            <div class="my-2 text-danger-emphasis tw-bold">{{message}}</div>
+                        {% endif %}
+                         
+                        
+                    </form>
+                {% endif %}
+            
+            {% else %}
+        
+            <a class="my-2 hover-effect"" href="{% url 'auctions:login' %}">Login to place bid on this listing.</a>
+        
+            {% endif %}
+            
+        {% else %}
+        
+            {% if listing.winner %}
+        
+                {% if listing.winner == request.user %}
+                    <h5 class="my-2 text-warning" >Listing Closed at {{ listing.bidCurrentPrice }} with {{ numBids }} bid(s). You are the winner of this auction.</h5>
+                {% else %}
+                    <h5 class="my-2 text-warning" >Listing Closed at {{ listing.bidCurrentPrice }} with {{ numBids }} bid(s). {{ listing.winner }} is the winner of this auction.</h5>
+                {% endif %}
+        
+            {% else %}
+                <h5 class="my-2 text-warning" >Listing Closed at {{ listing.bidCurrentPrice }} with {{ numBids }} bid(s).</h5>
+            {% endif %}
+        
+        {% endif %} 
+        </div>
+    </div>
+</div>
+
+<nav class="container mb-3">
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+      <button class="nav-link  text-warning active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Details</button>
+      <button class="nav-link text-warning" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Comments</button>
+      
+    </div>
+  </nav>
+  <div class="tab-content container mb-3" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
+        <h5>{{listing.description}}</h5>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Listed by: <a class="text-warning" href="{% url 'auctions:userProfile' listing.lister.username %}">{{ listing.lister }}</a></li>
+            {% if listing.category %}
+            <li class="list-group-item">Category:  <a class="text-warning" href="{% url 'auctions:categoryListings' listing.category %}">{{listing.category}}</a></li>
+            {% else %}
+                <li class="list-group-item">Category: No Category Listed</li>
+            {% endif %}
+            <li class="list-group-item">Created On: {{listing.time}}</li> 
+        </ul>
+    </div>
+    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
+
+
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-8 col-lg-6">
+              <div class="card shadow-0 border bg-warning-subtle" >
+                <div class="card-body p-4">
+                
+                {% if user.is_authenticated %}
+                    <form action="{% url 'auctions:saveComment' listing.id %}" method="post">
+                        {% csrf_token %}
+                        <div data-mdb-input-init class="form-outline mb-4">
+                            <input type="text" name="comment" id="addANote" class="form-control" placeholder="Write Comment..." />
+                        </div>
+                        
+                    </form>
+                {% else %}
+                    <a href="{% url 'auctions:login' %}" class="hover-effect">Login to write Comment on this listing.</a>
+                {% endif %}
+                    
+                  {% for comment in comments %}
+
+                    <div class="card mb-4">
+                        <div class="card-body">
+                        <p>{{comment.content}}</p>
+            
+                        <div class="d-flex justify-content-between">
+                            <div class="d-flex flex-row align-items-center">
+                            <p class="small mb-0 ms-2"><a class="hover-effect text-decoration-none" href="{% url 'auctions:userProfile' comment.writer.username %}">{{comment.writer}}</a></p>
+                            </div>
+                            <div class="d-flex flex-row align-items-center">
+                            <p class="small text-muted mb-0">{{comment.time}}</p>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    
+                {% empty %}
+                    <div class="card mb-4">
+                        <div class="card-body">
+                        <p>No Comments on this listing so far.</p>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+    </div>
+  </div>
+
+
+{% endblock %}

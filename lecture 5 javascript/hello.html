@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello </title>
+    <script>
+        // == weaker equality checking, return true if values are same but with different types 
+        // === strict equality checking, return true if both values and types are same 
+
+        // function hello(){
+        //     const heading = document.querySelector('h1');
+        //     if(heading.innerHTML === 'Hello!'){
+        //         heading.innerHTML = 'Goodbye!';
+        //     } else {
+        //         heading.innerHTML = 'Hello!';
+        //     }
+            
+        // }
+
+        document.addEventListener('DOMContentLoaded', function(){
+
+            document.querySelector('form').onsubmit = function(){
+                const name = document.querySelector('#name').value;
+                alert(`Hello, ${name}!`);
+            }
+
+        });
+        
+    </script>
+</head>
+<body>
+    <h1>Hello!</h1>
+    <!-- <button onclick="hello()">Click Here</button> -->
+
+    <form>
+        <input type="text" autofocus placeholder="Name" id="name">
+        <input type="submit">
+    </form>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Is It Sunday?</title>
+    <link rel="stylesheet" href="{% static 'isitsunday/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        {%if answer%}
+        <h1>Yes</h1>
+        {%else%}
+        <h1>No</h1>
+        {%endif%}
+    </div>
+</body>
+</html>
