@@ -8,7 +8,8 @@ from .models import User
 
 
 def index(request):
-    return render(request, "network/index.html")
+    # return render(request, "network/index.html")
+    return render(request, "index.html")
 
 
 def login_view(request):
