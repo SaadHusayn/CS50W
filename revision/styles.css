@@ -1,0 +1,10 @@
+
+body{
+    display: flex;
+    flex-direction: row;
+}
+
+h1, h2{
+    color: blueviolet;
+    text-align: center;
+}
