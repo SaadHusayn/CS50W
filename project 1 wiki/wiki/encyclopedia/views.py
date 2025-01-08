@@ -57,10 +57,11 @@ def createNewPage(request):
             if(util.isValidPageTitle(pageTitle)):
                 newPageFile = default_storage.open(f"entries/{pageTitle}.md", mode="w")
                 newPageFile.write(markdownContent)
+                return HttpResponseRedirect(reverse("encyclopedia:viewPage" , args=(pageTitle, )))
             else:
                 errorMessage = f"Page with title {pageTitle.lower()} already exists"
-                return render(request, 'encyclopedia/errorPage.html', {
-                    "pageTitle" : pageTitle,
+                return render(request, 'encyclopedia/createNewPage.html', {
+                    "newPageForm" : newPageData,
                     "errorMessage": errorMessage,
                     "searchEntryForm": NewSearchEntryForm()
                 })
@@ -69,7 +70,6 @@ def createNewPage(request):
     return render(request, 'encyclopedia/createNewPage.html',{
         "newPageForm":NewPageForm(),
         "searchEntryForm": NewSearchEntryForm(),
-        "searchEntryForm": NewSearchEntryForm()
     })
 
 def editPage(request, pageTitle):
@@ -80,6 +80,12 @@ def editPage(request, pageTitle):
             editPageFile = default_storage.open(f"entries/{pageTitle}.md", mode="w")
             editPageFile.write(markdownContent)
             return HttpResponseRedirect(reverse("encyclopedia:viewPage", args=(pageTitle, )))
+        else:
+            return render(request, 'encyclopedia/editPage.html', {
+                "pageTitle" : pageTitle,
+                "editPageForm": editFormData,
+                "searchEntryForm": NewSearchEntryForm()
+            })
 
     return render(request, "encyclopedia/editPage.html", {
         "pageTitle":pageTitle,

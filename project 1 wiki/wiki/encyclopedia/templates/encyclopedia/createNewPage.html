@@ -16,11 +16,13 @@
 
 
 {% block body %}
-<h1>Create New Page</h1>
+<!-- <h1>Create New Page</h1> -->
+<h1>{{ pageTitle }}</h1>
 <form action="{% url 'encyclopedia:createNewPage' %}" method="post">
     {% csrf_token %}
     {{newPageForm}}
-    <input type="submit" value="Save New Page">
+    <h5 class="text-danger">{{errorMessage}}</h3>
+    <input type="submit" value="Save">
 </form>
 
 {% endblock %}
