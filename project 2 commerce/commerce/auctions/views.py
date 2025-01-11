@@ -106,7 +106,6 @@ def listing(request, listingID):
                 newBid = Bid(bidPrice = price, bidder = request.user, listing = listingObj)
                 newBid.save()
 
-        
         else:
 
             listingObj.isListingOpen = 0 

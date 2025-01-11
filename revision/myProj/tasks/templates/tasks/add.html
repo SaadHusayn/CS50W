@@ -2,8 +2,9 @@
 
 {% block body %}
 
-<form action="">
-    <input type="text" name="task" id="task" placeholder="go to gym">
+<form action="{% url 'tasks:add' %}" method="post">
+    {% csrf_token %}
+    {{ form }}
     <input type="submit" value="Add Task">
 </form>
 

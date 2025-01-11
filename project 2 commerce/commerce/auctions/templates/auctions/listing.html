@@ -42,52 +42,52 @@
 <!-- watchlist button ends -->
 
 
-            {% if listing.isListingOpen %}
+        {% if listing.isListingOpen %}
 
-            <h3 class="my-2 text-warning">${{listing.bidCurrentPrice}}</h3>
-        
-            {% if user.is_authenticated %}
-                
-                {% if currentBidder %}
-                    <p class="my-2">{{numBids}} bid(s) so far. <a class="hover-effect text-decoration-none" href="{% url 'auctions:userProfile' currentBidder.username %}">{{currentBidder}}</a> bid is the current bid</p>
-                {% else %}
-                    <p class="my-2">{{numBids}} bid(s) so far.</p>
-                {% endif %}
-        
-                {% if creatorIsViewingTheList %}
-        
-                    <form action="{% url 'auctions:listing' listing.id %}" method="post">
-                        {% csrf_token %}
-                        <input class="btn btn-outline-warning my-2"  type="submit" value="Close">
-                        <input type="hidden" name="isBidingForm" value="0">
-                    </form>
-        
-                {% else %}
-        
-                    <form action="{% url 'auctions:listing' listing.id%}" method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="isBidingForm" value="1">
-                        
-                        
-
-                        <div class="input-group my-2">
-                            <input type="number" min="0" step="0.01" name="bidPrice" class="form-control" placeholder="Bid" aria-label="Bid" aria-describedby="button-addon2">
-                            <button class="btn btn-outline-warning" type="submit" id="button-addon2">Place Bid</button>
-                        </div>
-                        
-                        {% if message %}
-                            <div class="my-2 text-danger-emphasis tw-bold">{{message}}</div>
-                        {% endif %}
-                         
-                        
-                    </form>
-                {% endif %}
+                <h3 class="my-2 text-warning">${{listing.bidCurrentPrice}}</h3>
             
-            {% else %}
-        
-            <a class="my-2 hover-effect"" href="{% url 'auctions:login' %}">Login to place bid on this listing.</a>
-        
-            {% endif %}
+                {% if user.is_authenticated %}
+                    
+                    {% if currentBidder %}
+                        <p class="my-2">{{numBids}} bid(s) so far. <a class="hover-effect text-decoration-none" href="{% url 'auctions:userProfile' currentBidder.username %}">{{currentBidder}}</a> bid is the current bid</p>
+                    {% else %}
+                        <p class="my-2">{{numBids}} bid(s) so far.</p>
+                    {% endif %}
+            
+                    {% if creatorIsViewingTheList %}
+            
+                        <form action="{% url 'auctions:listing' listing.id %}" method="post">
+                            {% csrf_token %}
+                            <input class="btn btn-outline-warning my-2"  type="submit" value="Close">
+                            <input type="hidden" name="isBidingForm" value="0">
+                        </form>
+            
+                    {% else %}
+            
+                        <form action="{% url 'auctions:listing' listing.id%}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="isBidingForm" value="1">
+                            
+                            
+
+                            <div class="input-group my-2">
+                                <input type="number" min="0" step="0.01" name="bidPrice" class="form-control" placeholder="Bid" aria-label="Bid" aria-describedby="button-addon2">
+                                <button class="btn btn-outline-warning" type="submit" id="button-addon2">Place Bid</button>
+                            </div>
+                            
+                            {% if message %}
+                                <div class="my-2 text-danger-emphasis tw-bold">{{message}}</div>
+                            {% endif %}
+                            
+                            
+                        </form>
+                    {% endif %}
+                
+                {% else %}
+            
+                    <a class="my-2 hover-effect"" href="{% url 'auctions:login' %}">Login to place bid on this listing.</a>
+            
+                {% endif %}
             
         {% else %}
         
