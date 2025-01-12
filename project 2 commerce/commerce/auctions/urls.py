@@ -17,5 +17,4 @@ urlpatterns = [
     path("category" , views.category, name="category"),
     path("category/<str:categoryName>", views.category, name="categoryListings"),
     path("user/<str:username>", views.userProfile, name="userProfile")
-    # path("bid", views.bid, name="bid")
 ]
