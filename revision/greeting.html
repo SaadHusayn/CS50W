@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greetings</title>
+
+</head>
+<body> 
+    <form>
+        <input type="text" id="name" autofocus placeholder="Name">
+        <input type="submit">
+    </form>
+
+    <h1></h1>
+    <script>
+        document.querySelector('form').onsubmit = ()=>{
+                const name = document.querySelector('#name').value;
+                document.querySelector('h1').innerHTML = `Hello ${name.charAt(0).toUpperCase() + name.slice(1)}!`;
+        }
+    </script>
+</body>
+</html>

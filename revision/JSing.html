@@ -6,11 +6,15 @@
     <title>JSS</title>
 </head>
 <body>
-    <button id="mybutton">Click ME</button>
+    <button id="mybutton" onclick="func()">Click ME</button>
     <script>
-        document.querySelector("#mybutton").addEventListener("click", () => {
-            document.title = "Learning JS";
-        })
+        function another(){
+            let x = 10;
+        }
+
+        function func(){
+            alert(x);
+        }
     </script>
 </body>
 </html>
