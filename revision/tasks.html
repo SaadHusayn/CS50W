@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            if(!localStorage.getItem('tasks')){
+            let tasks = [];
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            console.log(JSON.stringify(tasks));
+            }
+
+            let tasks = [];
+            if(localStorage.getItem('tasks') !== undefined){
+                tasks = JSON.parse(localStorage.getItem('tasks'));
+            }
+            
+
+            tasks.forEach(task => {
+                const li = document.createElement('li');
+                li.innerHTML = task;
+                document.querySelector('#tasks').append(li);
+            });
+            
+
+            document.querySelector('#submit').disabled = true;
+
+            document.querySelector('#task').onkeyup = function(){
+                if(document.querySelector('#task').value.length > 0){
+                    document.querySelector('#submit').disabled = false;
+                }else{
+                    document.querySelector('#submit').disabled = true;
+                }
+            }
+
+            document.querySelector('form').onsubmit = function(){
+                const task = document.querySelector('#task').value;
+
+                const li = document.createElement('li');
+                li.innerHTML = task;
+
+                document.querySelector('#tasks').append(li);
+
+                let tasks = JSON.parse(localStorage.tasks);
+                tasks.push(task);
+                localStorage.tasks = JSON.stringify(tasks);
+                
+
+                document.querySelector('#task').value = '';
+
+                //stop form from submitting
+                return false;
+            }
+        });
+    </script>
+</head>
+<body>
+    <h1>Tasks</h1>
+    <ul id="tasks"></ul>
+    <form>
+        <input autofocus type="text" id="task">
+        <input id="submit" type="submit" value="Add">
+    </form>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>hello</h1>
+    <h2>nice</h2>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.querySelector('h1').innerHTML = "fine";
+            }, 1000);
+            document.querySelector('h2').innerHTML = "also fine";
+        });
+
+    </script>
+</body>
+
+</html>
