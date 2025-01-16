@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto</title>
+</head>
+
+<body>
+    <h1></h1>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const apiKey = "676f3be9-7730-4214-85ad-1f0b72f7c556"; // Replace with your actual API key
+
+            const proxyUrl = "https://cors-anywhere.herokuapp.com/";
+            const apiUrl = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?start=1&limit=10&sort=market_cap&cryptocurrency_type=all&tag=all";
+
+            apidata = {}
+
+            fetch(proxyUrl + apiUrl, {
+                method: "GET",
+                headers: {
+                    "X-CMC_PRO_API_KEY": apiKey
+                }
+            })
+                .then(result => {
+                    if (!result.ok) {
+                        throw new Error(`HTTP error! Status: ${result.status}`);
+                    }
+                    return result.json();
+                })
+                .then(output => {
+                    console.log(output);
+                    apidata = output;
+                    for(i=0;i<apidata.data.length;i++){
+                    let symbol = apidata.data[i].symbol;
+                    let optionElement = document.createElement('option');
+                    optionElement.innerHTML = symbol;
+                    optionElement.setAttribute("value", i);
+                    document.querySelector('select').appendChild(optionElement);
+                }
+                const usdt = apidata.data[3].quote.USD.price;
+                document.querySelector('h1').innerHTML = apidata.data[0].quote.USD.price * usdt;
+                
+                
+                })
+                .catch(error => {
+                    document.querySelector('h1').innerHTML = "Error Fetching Data";
+                });
+
+
+                document.querySelector('select').onchange = function(){
+                    const usdt = apidata.data[3].quote.USD.price;
+                    document.querySelector('h1').innerHTML = apidata.data[this.value].quote.USD.price * usdt;
+                }
+
+
+
+        });
+    </script>
+</body>
+    <h1></h1>
+    <select id="coins">
+    </select>
+</html>

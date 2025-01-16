@@ -1,23 +1,30 @@
+if(!localStorage.getItem('counter')){
+    localStorage.setItem('counter', 0);
+}
+
+let count = localStorage.getItem('counter');
+
+
 document.addEventListener('DOMContentLoaded', function(){
     document.querySelector("#increase").onclick = increase;
     document.querySelector("#reset").onclick = reset;
     document.querySelector("h1").innerHTML = count;
+    setInterval(increase, 1000);
 })
 
-let count = 0;
+
+
 
 
 function increase() {
     count++;
-    if(count % 10 === 0){
-        alert(`The count is now ${count}`);
-    }
     document.querySelector("h1").innerHTML = count;
+    localStorage.setItem('counter', count);
 }
 
 function reset() {
     count = 0;
-    console.log(count);
 
     document.querySelector("h1").innerHTML = count;
+    localStorage.setItem('counter', count);
 }
