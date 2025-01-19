@@ -79,7 +79,6 @@ function load_mailbox(mailbox) {
   fetch(`/emails/${mailbox}`)
     .then(response => response.json())
     .then(emails => {
-
       if (emails.length === 0) {
 
         //mailbox is empty
@@ -165,18 +164,20 @@ function show_email_info(email_id, mailbox) {
   // Clear out previous mail info
   document.querySelector('#mail-view').innerHTML = '';
 
-  //now the user has read the email
-  fetch(`/emails/${email_id}`, {
-    method: 'PUT',
-    body: JSON.stringify({
-      read: true
-    })
-  });
-
   fetch(`/emails/${email_id}`)
     .then(response => response.json())
     .then(email => {
+      if (email.read === false) {
 
+        //now the user has read the email, we have to update its read state
+        fetch(`/emails/${email_id}`, {
+          method: 'PUT',
+          body: JSON.stringify({
+            read: true
+          })
+        });
+        
+      }
 
       // ... modifying DOM of #mail-view element ...
       document.querySelector('#mail-view').innerHTML = `
