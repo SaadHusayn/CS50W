@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animations</title>
+    <style>
+        @keyframes move {
+            0%{
+                left: 30%;
+                top: 3%;
+            }
+            20%{
+                top: 3%;
+                left: 3%;
+            }
+            40%{
+                top: 30%;
+                left: 3%;
+            }
+            60%{
+                top: 30%;
+                left: 30%;
+            }
+            80%{
+                top: 60%;
+                left: 30%;
+            }
+            100%{
+                top: 60%;
+                left: 3%;
+            }
+        }
+
+        h1{
+            position: absolute;
+            animation-name: move;
+            animation-duration: 4s;
+            animation-fill-mode: forwards;
+            animation-iteration-count: infinite;
+        }
+
+        button{
+            position:absolute;
+            left: 70%;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            const h1 = document.querySelector('h1');
+            h1.style.animationPlayState = 'paused';
+
+            document.querySelector('button').onclick = () => {
+                if(h1.style.animationPlayState === 'paused'){
+                    h1.style.animationPlayState = 'running';
+                }else{
+                    h1.style.animationPlayState = 'paused';
+                }
+            }
+        })
+    </script>
+</head>
+<body>
+    <h1>S</h1>
+    <button>Start/Pause</button>
+</body>
+</html>

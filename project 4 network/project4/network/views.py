@@ -1,15 +1,15 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import User, Post
+from .forms import PostForm
 
 
 def index(request):
-    # return render(request, "network/index.html")
-    return render(request, "index.html")
+    return render(request, "network/index.html", {"form": PostForm(), "posts":Post.objects.all()})
 
 
 def login_view(request):
@@ -25,9 +25,11 @@ def login_view(request):
             login(request, user)
             return HttpResponseRedirect(reverse("index"))
         else:
-            return render(request, "network/login.html", {
-                "message": "Invalid username and/or password."
-            })
+            return render(
+                request,
+                "network/login.html",
+                {"message": "Invalid username and/or password."},
+            )
     else:
         return render(request, "network/login.html")
 
@@ -46,19 +48,33 @@ def register(request):
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
         if password != confirmation:
-            return render(request, "network/register.html", {
-                "message": "Passwords must match."
-            })
+            return render(
+                request, "network/register.html", {"message": "Passwords must match."}
+            )
 
         # Attempt to create new user
         try:
             user = User.objects.create_user(username, email, password)
             user.save()
         except IntegrityError:
-            return render(request, "network/register.html", {
-                "message": "Username already taken."
-            })
+            return render(
+                request, "network/register.html", {"message": "Username already taken."}
+            )
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+
+
+def create_post(request):
+    if request.method == "POST":
+        postForm = PostForm(request.POST)
+        if postForm.is_valid():
+            post = postForm.save(commit=False)
+            post.creator = request.user
+            post.save()
+            return HttpResponseRedirect(reverse("index"))
+        else:
+            return render(request, "network/index.html", {"form": postForm, "posts":Post.objects.all()})
+    else:
+        return Http404('not allowed :(')
