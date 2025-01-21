@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Requesting Data From Server</title>
+    <script>
+        window.onscroll = function(){
+            if(window.scrollY + window.innerHeight >= document.body.offsetHeight){
+                setTimeout(() => {
+                    load()
+                }, 1000); 
+            }
+        }
+
+        let quantity = 15;
+
+        document.addEventListener('DOMContentLoaded', load);
+
+        async function load(){
+            let response = await fetch(`/facts/${quantity}`);
+            if(!response.ok){
+                console.error("Error in getting cat data");
+            }
+            let apiData = await response.json();
+            apiData["facts"].forEach(data => {
+                addFact(data["fact"]);
+            })
+        }
+
+        function addFact(fact){
+            factElement = document.createElement('h3');
+            factElement.innerHTML = fact;
+            document.querySelector('#facts').append(factElement);
+        }
+    </script>
+</head>
+<body>
+    <div id="facts"></div>
+</body>
+</html>
