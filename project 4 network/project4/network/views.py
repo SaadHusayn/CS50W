@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -9,7 +9,7 @@ from .forms import PostForm
 
 
 def index(request):
-    return render(request, "network/index.html", {"form": PostForm(), "posts":Post.objects.all()})
+    return render(request, "network/index.html", {"form": PostForm(), "posts":Post.objects.all().order_by('-created_at')})
 
 
 def login_view(request):
@@ -75,6 +75,16 @@ def create_post(request):
             post.save()
             return HttpResponseRedirect(reverse("index"))
         else:
-            return render(request, "network/index.html", {"form": postForm, "posts":Post.objects.all()})
+            return render(request, "network/index.html", {"form": postForm, "posts":Post.objects.all().order_by('-created_at')})
     else:
-        return Http404('not allowed :(')
+        return HttpResponseNotFound('not allowed :(')
+
+
+def user_profile(request, username):
+    try:
+        user = User.objects.get(username = username)
+    except:
+         return HttpResponseNotFound('not allowed :(')
+    
+    return render(request, 'network/profile.html',{"userData":user, "posts":user.posts.all().order_by('-created_at')})
+

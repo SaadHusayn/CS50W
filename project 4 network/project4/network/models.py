@@ -17,3 +17,10 @@ class Post(models.Model):
     postContent = models.CharField(max_length=1000, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     liked_by = models.ManyToManyField(User, related_name="liked_posts", blank=True)
+
+    def __str__(self):
+        if len(self.postContent) > 8:
+            dots = '...'
+        else:
+            dots = ''
+        return f"{self.creator.username}: {self.postContent[:8] + dots } at {self.created_at}"

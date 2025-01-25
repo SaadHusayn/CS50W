@@ -2,20 +2,25 @@
 
 {% block body %}
 
-    {% if user.is_authenticated %}
-        <form method="post" action="{% url 'createPost' %}">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value="Post">
-        </form>
-        
-    {% endif %}
+{% if user.is_authenticated %}
+<form method="post" action="{% url 'createPost' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Post">
+</form>
+
+{% endif %}
 
 
-    {% for post in posts %}
+{% for post in posts %}
 
-        <h5>{{post.creator}}: {{post.postContent}}</h5>
+<div class="post">
+    <h5><a href="{% url 'userProfile' post.creator.username %}">{{post.creator}}</a>: {{post.postContent}}</h5>
+    <p>{{post.created_at}}</p>
+    <button>add/remove like</button>
+    <p>{{post.liked_by.count}} Like(s)</p>
+</div>
 
-    {% endfor %}
+{% endfor %}
 
 {% endblock %}

@@ -1,0 +1,38 @@
+{% extends "network/layout.html" %}
+
+
+{% block body %}
+
+<h1>{{userData.username}}</h1>
+<h3>Follower: {{userData.followers.count}} | Following: {{userData.following.count}}</h3>
+
+{% if user.is_authenticated and user != userData %}
+    {% if user in userData.followers.all %}
+        <button data-action="unfollow" class="follow-button">unfollow</button>
+    {% else %}
+        <button data-action="follow" class="follow-button">follow</button>
+    {% endif %}
+{% endif %}
+
+{% for post in posts %}
+
+<div class="post">
+    <h5><a href="{% url 'userProfile' post.creator.username %}">{{post.creator}}</a>: {{post.postContent}}</h5>
+    <p>{{post.created_at}}</p>
+    <button>add/remove like</button>
+    <p>{{post.liked_by.count}} Like(s)</p>
+</div>
+
+{% endfor %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function(){
+        document.querySelector('.follow-button').onclick = function(){
+            if(dataset is follow)
+            then user follows userData
+            user1 , user2, follow-unfollow boolean thing
+        }
+    })
+</script>
+
+{% endblock %}
