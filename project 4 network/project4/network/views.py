@@ -1,9 +1,10 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
-
+import json
+from django.views.decorators.csrf import csrf_exempt
 from .models import User, Post
 from .forms import PostForm
 
@@ -87,4 +88,28 @@ def user_profile(request, username):
          return HttpResponseNotFound('not allowed :(')
     
     return render(request, 'network/profile.html',{"userData":user, "posts":user.posts.all().order_by('-created_at')})
+
+def follow(request):
+    if request.method != "POST":
+        #redirect to the home page
+        return HttpResponseRedirect(reverse("index"))
+
+    user1 = request.user
+    user2 = User.objects.get(pk = request.POST["user2ID"])
+    toFollow = int(request.POST["toFollow"])
+
+    #if toFollow is true, user1 follows user2
+    #if toFollow is false, user1 unfollows user2
+    if toFollow:
+        if not user2 in user1.following.all():
+            user2.add_follower(user1)
+    else:
+        if user2 in user1.following.all():
+            #user1 is unfollowing user2
+            user1.following.remove(user2)
+    
+    return HttpResponseRedirect(reverse("userProfile", args=(user2.username, )))
+
+
+
 

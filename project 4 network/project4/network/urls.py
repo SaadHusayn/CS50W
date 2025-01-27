@@ -13,5 +13,5 @@ urlpatterns = [
 
 
     #api
-    path("")
+    path("follow", views.follow, name="follow")
 ]

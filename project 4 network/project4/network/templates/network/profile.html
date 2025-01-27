@@ -7,11 +7,18 @@
 <h3>Follower: {{userData.followers.count}} | Following: {{userData.following.count}}</h3>
 
 {% if user.is_authenticated and user != userData %}
-    {% if user in userData.followers.all %}
-        <button data-action="unfollow" class="follow-button">unfollow</button>
-    {% else %}
-        <button data-action="follow" class="follow-button">follow</button>
-    {% endif %}
+    <form method="post" action="{% url 'follow' %}">
+        {% csrf_token %}
+        <input type="hidden" name="user2ID" value="{{userData.id}}">
+        {% if user in userData.followers.all %}
+            <input type="submit" value="unfollow">
+            <input type="hidden" name="toFollow" value="0">
+        {% else %}
+            <input type="submit" value="follow">
+            <input type="hidden" name="toFollow" value="1">
+        {% endif %}
+    </form>
+
 {% endif %}
 
 {% for post in posts %}
@@ -25,14 +32,22 @@
 
 {% endfor %}
 
-<script>
-    document.addEventListener('DOMContentLoaded', function(){
-        document.querySelector('.follow-button').onclick = function(){
-            if(dataset is follow)
-            then user follows userData
-            user1 , user2, follow-unfollow boolean thing
+<!-- <script>
+    {% comment %} document.addEventListener('DOMContentLoaded', function(){
+        document.querySelector(".follow-button").onclick = function(){
+            fetch('/follow', {
+                method:'PUT',
+                body: JSON.stringify({
+                    user1ID: {{user.id}},
+                    user2ID: {{userData.id}},
+                    toFollow: (this.dataset.action === "follow" ? 1 : 0)
+                })
+            })
+            .then(response => {
+                console.log(response);
+            });
         }
-    })
-</script>
+    }); {% endcomment %}
+</script> -->
 
 {% endblock %}
