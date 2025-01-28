@@ -6,9 +6,9 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['postContent', ]
-        widget = {
-            'content':forms.Textarea(attrs={'class':'form-control', 'rows':3})
+        widgets = {
+            'postContent':forms.Textarea(attrs={'class':'form-control', 'rows':3, 'autofocus':True})
         }
         labels = {
-            'content':'New Post'
-        }
+            'postContent':'New Post'
+        } 

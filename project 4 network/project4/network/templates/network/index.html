@@ -11,16 +11,6 @@
 
 {% endif %}
 
-
-{% for post in posts %}
-
-<div class="post">
-    <h5><a href="{% url 'userProfile' post.creator.username %}">{{post.creator}}</a>: {{post.postContent}}</h5>
-    <p>{{post.created_at}}</p>
-    <button>add/remove like</button>
-    <p>{{post.liked_by.count}} Like(s)</p>
-</div>
-
-{% endfor %}
+{% include 'network/posts.html' %}
 
 {% endblock %}

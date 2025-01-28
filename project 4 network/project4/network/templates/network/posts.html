@@ -1,0 +1,33 @@
+
+{% for post in page_obj %}
+
+<div class="post">
+    <h5><a href="{% url 'userProfile' post.creator.username %}">{{post.creator}}</a>: {{post.postContent}}</h5>
+    <p>{{post.created_at}}</p>
+    <button>add/remove like</button>
+    <p>{{post.liked_by.count}} Like(s)</p>
+</div>
+
+{% empty %}
+
+<div>No Posts.</div>
+
+{% endfor %}
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>

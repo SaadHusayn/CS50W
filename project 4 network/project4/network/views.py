@@ -1,16 +1,21 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, JsonResponse
+from django.http import HttpResponseRedirect, HttpResponseNotFound, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
-import json
-from django.views.decorators.csrf import csrf_exempt
+# from django.views.decorators.htt
 from .models import User, Post
 from .forms import PostForm
+from django.core.paginator import Paginator
 
 
 def index(request):
-    return render(request, "network/index.html", {"form": PostForm(), "posts":Post.objects.all().order_by('-created_at')})
+    posts_list = Post.objects.all().order_by('-created_at')
+    paginator = Paginator(posts_list, 10)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, "network/index.html", {"form": PostForm(), "page_obj":page_obj})
 
 
 def login_view(request):
@@ -85,9 +90,15 @@ def user_profile(request, username):
     try:
         user = User.objects.get(username = username)
     except:
-         return HttpResponseNotFound('not allowed :(')
+        return HttpResponseNotFound('not allowed :(')
+
+    posts_list = user.posts.all().order_by('-created_at')
+    paginator = Paginator(posts_list, 10)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     
-    return render(request, 'network/profile.html',{"userData":user, "posts":user.posts.all().order_by('-created_at')})
+    return render(request, 'network/profile.html',{"userData":user, "page_obj":page_obj})
 
 def follow(request):
     if request.method != "POST":
@@ -112,4 +123,16 @@ def follow(request):
 
 
 
+def following(request):
+    posts = User.objects.none()
+    for user in request.user.following.all():
+        posts = posts | user.posts.all()
+    
+    
+    posts_list = posts
+    paginator = Paginator(posts_list, 10)
 
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    return render(request, 'network/following.html',{"page_obj":page_obj})
