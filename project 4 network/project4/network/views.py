@@ -1,20 +1,19 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.http import HttpResponseRedirect, HttpResponseNotFound, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponseNotFound, HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 # from django.views.decorators.htt
 from .models import User, Post
 from .forms import PostForm
-from django.core.paginator import Paginator
+import json
+# from django.core.paginator import Paginator
+from .util import get_page_obj
 
 
 def index(request):
-    posts_list = Post.objects.all().order_by('-created_at')
-    paginator = Paginator(posts_list, 10)
-
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    page_obj = get_page_obj(request, Post.objects.all().order_by('-created_at'))
     return render(request, "network/index.html", {"form": PostForm(), "page_obj":page_obj})
 
 
@@ -81,7 +80,7 @@ def create_post(request):
             post.save()
             return HttpResponseRedirect(reverse("index"))
         else:
-            return render(request, "network/index.html", {"form": postForm, "posts":Post.objects.all().order_by('-created_at')})
+            return render(request, "network/index.html", {"form": postForm, "page_obj":get_page_obj(request, Post.objects.all().order_by('-created_at'))})
     else:
         return HttpResponseNotFound('not allowed :(')
 
@@ -92,11 +91,7 @@ def user_profile(request, username):
     except:
         return HttpResponseNotFound('not allowed :(')
 
-    posts_list = user.posts.all().order_by('-created_at')
-    paginator = Paginator(posts_list, 10)
-
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    page_obj = get_page_obj(request, user.posts.all().order_by('-created_at'))
     
     return render(request, 'network/profile.html',{"userData":user, "page_obj":page_obj})
 
@@ -122,17 +117,28 @@ def follow(request):
     return HttpResponseRedirect(reverse("userProfile", args=(user2.username, )))
 
 
-
+@login_required
 def following(request):
-    posts = User.objects.none()
+    posts = Post.objects.none()
     for user in request.user.following.all():
         posts = posts | user.posts.all()
-    
-    
-    posts_list = posts
-    paginator = Paginator(posts_list, 10)
 
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    page_obj = get_page_obj(request, posts.order_by('-created_at'))
     
     return render(request, 'network/following.html',{"page_obj":page_obj})
+
+
+def like(request):
+    if request.method != "PUT":
+        return HttpResponseNotFound('not allowed :(')
+    
+    data = json.loads(request.body)
+    post = Post.objects.get(pk = data["postID"])
+    isLike = data["like"]
+
+    if isLike:
+        post.liked_by.add(request.user)
+    else:
+        post.liked_by.remove(request.user)
+    
+    return HttpResponse(status=200)
