@@ -1,13 +1,19 @@
+{% load static %}
 {% for post in page_obj %}
 
 <div class="post">
-    <h5><a href="{% url 'userProfile' post.creator.username %}">{{post.creator}}</a>: {{post.postContent}}</h5>
+    <h5><a href="{% url 'userProfile' post.creator.username %}">{{post.creator}}</a>: <div class="post-content-{{post.id}}">{{post.postContent}}</div>
+    </h5>
     <p>{{post.created_at}}</p>
     {% if user.is_authenticated %}
     {% if user in post.liked_by.all %}
     <button class="like-button" data-like="false" data-postid="{{post.id}}">remove like</button>
     {% else %}
     <button class="like-button" data-like="true" data-postid="{{post.id}}">add like</button>
+    {% endif %}
+
+    {% if post.creator == user %}
+    <button class="edit-post-button" id="edit-post-button-{{post.id}}" data-postid="{{post.id}}">Edit Post</button>
     {% endif %}
 
     {% endif %}
@@ -39,65 +45,4 @@
     </span>
 </div>
 
-<script>
-
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-
-    async function likeButtonFunctionality(element) {
-        const isLikeButton = element.dataset.like === "true" ? 1 : 0;
-        try {
-            const response = await fetch('/like', {
-                method: "PUT",
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken')
-                },
-                body: JSON.stringify({
-                    "like": isLikeButton,
-                    "postID": element.dataset.postid
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error(`Response Status: ${response.status}`);
-            }
-
-            //now change the like button content and update like counter
-            if (isLikeButton) {
-                element.dataset.like = "false";
-                element.innerHTML = "remove like";
-                document.querySelector(`.like-count-${element.dataset.postid}`).innerHTML++;
-            } else {
-                element.dataset.like = "true";
-                element.innerHTML = "add like";
-                document.querySelector(`.like-count-${element.dataset.postid}`).innerHTML--;
-            }
-        }
-        catch (error) {
-            console.error(error.message);
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        document.addEventListener('click', async function (event) {
-            const element = event.target;
-
-            if (element.className === "like-button") {
-                await likeButtonFunctionality(element);
-            }
-        })
-    })
-</script>
+<script src="{% static 'network/posts.js' %}"></script>

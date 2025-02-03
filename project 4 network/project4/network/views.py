@@ -70,7 +70,7 @@ def register(request):
     else:
         return render(request, "network/register.html")
 
-
+@login_required
 def create_post(request):
     if request.method == "POST":
         postForm = PostForm(request.POST)
@@ -95,6 +95,7 @@ def user_profile(request, username):
     
     return render(request, 'network/profile.html',{"userData":user, "page_obj":page_obj})
 
+@login_required
 def follow(request):
     if request.method != "POST":
         #redirect to the home page
@@ -127,10 +128,10 @@ def following(request):
     
     return render(request, 'network/following.html',{"page_obj":page_obj})
 
-
+@login_required
 def like(request):
     if request.method != "PUT":
-        return HttpResponseNotFound('not allowed :(')
+        return HttpResponseNotFound('Error: only put request is allowed')
     
     data = json.loads(request.body)
     post = Post.objects.get(pk = data["postID"])
@@ -142,3 +143,22 @@ def like(request):
         post.liked_by.remove(request.user)
     
     return HttpResponse(status=200)
+
+@login_required
+def editPost(request):
+    if request.method != "PUT":
+        return HttpResponseNotFound('Error: only put request is allowed')
+    
+    data = json.loads(request.body)
+    post = Post.objects.get(pk = data["postID"])
+    postContent = data["postContent"]
+
+    if post.creator == request.user:
+        post.postContent = postContent
+        post.save()
+        return HttpResponse(status=200)
+    else:
+        return HttpResponse('Error: A user can only edit their own posts!', status=404)
+
+
+    
