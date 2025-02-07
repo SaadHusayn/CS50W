@@ -15,44 +15,72 @@
         crossorigin="anonymous"></script>
 </head>
 
-<body>
+<body class="d-flex flex-column h-100">
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="{% url 'index' %}">Network</a>
+     <!-- navbar starts -->
 
-        <div>
-            <ul class="navbar-nav mr-auto">
-                {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'userProfile' user.username %}"><strong>{{ user.username }}</strong></a>
-                </li>
-                {% endif %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'index' %}">All Posts</a>
-                </li>
-                {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'following' %}">Following</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
-                </li>
-                {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">Log In</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'register' %}">Register</a>
-                </li>
-                {% endif %}
-            </ul>
-        </div>
-    </nav>
+  <nav class="navbar navbar-expand-lg  ">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'index' %}">
+        Network</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
+        aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link text-white link-body-emphasis" aria-current="page"
+              href="{% url 'index' %}">All Posts</a>
+          </li>
 
-    <div class="body">
+          {% if user.is_authenticated %}
+
+          <li class="nav-item">
+            <a class="nav-link text-white link-body-emphasis" href="{% url 'following' %}">Following</a>
+          </li>
+          
+
+          <!-- could be use for liked posts -->
+<!-- 
+          <li class="nav-item">
+            <a class="nav-link text-white link-body-emphasis" href="#">Watchlist</a>
+          </li> -->
+
+          {% endif %}
+
+          <!-- could be use for search users -->
+          <!-- <li class="nav-item">
+            <a class="nav-link text-white link-body-emphasis" href="#">Categories</a>
+          </li> -->
+
+
+        </ul>
+
+        {% if user.is_authenticated %}
+        <span class="navbar-text">
+          Signed in as <a href="{% url 'userProfile' user.username %}" class="text-warning ">{{ user.username }}</a>.
+        </span>
+        <a href="{% url 'logout' %}"><button type="button" class="btn btn-outline-warning me-2 ms-3">Log
+            Out</button></a>
+        {% else %}
+        <a href="{% url 'login' %}"><button type="button"
+            class="btn btn-outline-warning me-2 ms-1">Login</button></a>
+        <a href="{% url 'register' %}"><button type="button" class="btn btn-warning">Register</button></a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <!-- navbar ends -->
+    
+  <!-- body starts  -->
         {% block body %}
         {% endblock %}
-    </div>
+
+  <!-- body ends  -->
+
+  
 </body>
 
 </html>
