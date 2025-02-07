@@ -6,3 +6,12 @@
     box-sizing: border-box;
     font-family: "Nunito", sans-serif;
 }
+
+
+.hover-effect{
+    color: #DEE2E6 !important;
+}
+
+.hover-effect:hover {
+    color: #ffc107 !important;
+}
