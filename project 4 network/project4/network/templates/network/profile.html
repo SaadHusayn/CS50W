@@ -1,7 +1,14 @@
 {% extends "network/layout.html" %}
+{% load static %}
 
 
 {% block body %}
+
+{% if userData.profile_picture %}
+    <img src="{{userData.profile_picture.url}}" alt="{{userData.username}}" >
+{% else %}
+    <img src="{% static 'network/defaultUserProfilePic.jpg' %}" alt="{{userData.username}}" >
+{% endif %}
 
 <h1>{{userData.username}}</h1>
 <h3>Follower: {{userData.followers.count}} | Following: {{userData.following.count}}</h3>

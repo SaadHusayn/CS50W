@@ -2,10 +2,17 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.exceptions import ValidationError
 
+def user_directory_path(instance, filename):
+    ext = filename.split('.')[-1]  
+    return f'network/users_profile_pictures/{instance.username}.{ext}'  
+
+
 class User(AbstractUser):
     followers = models.ManyToManyField('self', related_name='following', symmetrical=False, blank=True)
+    profile_picture = models.ImageField(blank=True, upload_to=user_directory_path)
+    bio = models.CharField(blank=True, max_length=300)
 
-    def add_follower(self, user):
+    def add_follower(self, user):   
         if user == self:
             raise ValidationError("Users cannot follow themselves")
         
@@ -24,3 +31,13 @@ class Post(models.Model):
         else:
             dots = ''
         return f"{self.creator.username}: {self.postContent[:8] + dots } at {self.created_at}"
+
+
+class Comment(models.Model):
+    content = models.CharField(max_length=120)
+    writer = models.ForeignKey(User, on_delete=models.CASCADE,  related_name="comments")
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
+    time = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.writer}: {self.content}"

@@ -15,3 +15,12 @@
 .hover-effect:hover {
     color: #ffc107 !important;
 }
+
+.user-link{
+    text-decoration: none;
+    color: white;
+}
+
+.user-link:hover{
+    color: white;
+}

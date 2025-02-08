@@ -4,11 +4,9 @@ from django.db import IntegrityError
 from django.http import HttpResponseRedirect, HttpResponseNotFound, HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
-# from django.views.decorators.htt
 from .models import User, Post
 from .forms import PostForm
 import json
-# from django.core.paginator import Paginator
 from .util import get_page_obj
 
 

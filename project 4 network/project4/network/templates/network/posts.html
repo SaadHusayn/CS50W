@@ -1,8 +1,9 @@
 {% load static %}
 {% for post in page_obj %}
 
+
 <div class="post">
-    <h5><a href="{% url 'userProfile' post.creator.username %}">{{post.creator}}</a>: <div class="post-content-{{post.id}}">{{post.postContent}}</div>
+    <h5><a class="user-link" href="{% url 'userProfile' post.creator.username %}">{{post.creator}}</a>: <div class="post-content-{{post.id}}">{{post.postContent}}</div>
     </h5>
     <p>{{post.created_at}}</p>
     {% if user.is_authenticated %}
