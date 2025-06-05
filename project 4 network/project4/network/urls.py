@@ -13,5 +13,7 @@ urlpatterns = [
     path("following", views.following, name="following"),
     path("follow", views.follow, name="follow"),
     path("like", views.like, name="like"),
-    path("editPost", views.editPost, name="editPost")
+    path("editPost", views.editPost, name="editPost"),
+    path("getComments", views.getComments, name="getComments"),
+    path("addComment", views.addComment, name="addComment"),
 ]

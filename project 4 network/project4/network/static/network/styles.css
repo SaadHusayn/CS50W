@@ -24,3 +24,15 @@
 .user-link:hover{
     color: white;
 }
+
+.profile-pic-lg{
+    width: 200px;
+    height: 200px;
+
+}
+
+.profile-pic-sm{
+    width: 20px;
+    height: 20px;
+
+}

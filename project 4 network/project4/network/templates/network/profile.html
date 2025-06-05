@@ -5,9 +5,9 @@
 {% block body %}
 
 {% if userData.profile_picture %}
-    <img src="{{userData.profile_picture.url}}" alt="{{userData.username}}" >
+    <img class="profile-pic-lg" src="{{userData.profile_picture.url}}" alt="{{userData.username}}" >
 {% else %}
-    <img src="{% static 'network/defaultUserProfilePic.jpg' %}" alt="{{userData.username}}" >
+    <img class="profile-pic-lg" src="{% static 'network/defaultUserProfilePic.jpg' %}" alt="{{userData.username}}" >
 {% endif %}
 
 <h1>{{userData.username}}</h1>
@@ -31,23 +31,5 @@
 <h1>Posts by {{userData.username}}</h1>
 
 {% include 'network/posts.html' %}
-
-<!-- <script>
-    {% comment %} document.addEventListener('DOMContentLoaded', function(){
-        document.querySelector(".follow-button").onclick = function(){
-            fetch('/follow', {
-                method:'PUT',
-                body: JSON.stringify({
-                    user1ID: {{user.id}},
-                    user2ID: {{userData.id}},
-                    toFollow: (this.dataset.action === "follow" ? 1 : 0)
-                })
-            })
-            .then(response => {
-                console.log(response);
-            });
-        }
-    }); {% endcomment %}
-</script> -->
 
 {% endblock %}

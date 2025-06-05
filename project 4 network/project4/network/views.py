@@ -4,11 +4,10 @@ from django.db import IntegrityError
 from django.http import HttpResponseRedirect, HttpResponseNotFound, HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
-from .models import User, Post
+from .models import User, Post, Comment
 from .forms import PostForm
 import json
 from .util import get_page_obj
-
 
 def index(request):
     page_obj = get_page_obj(request, Post.objects.all().order_by('-created_at'))
@@ -159,4 +158,27 @@ def editPost(request):
         return HttpResponse('Error: A user can only edit their own posts!', status=404)
 
 
+def getComments(request):
+    if request.method != "GET":
+        return HttpResponseNotFound('Error: only get request is allowed')
     
+    postID = request.GET["postID"]
+    PostObj = Post.objects.get(pk = postID)
+    comments = PostObj.comments.all()
+    comments = comments.order_by('-created_at')
+
+    return JsonResponse([comment.serialize() for comment in comments], safe=False)
+
+@login_required
+def addComment(request):
+    if request.method != "POST":
+        return HttpResponseNotFound('Error: only post request is allowed')
+    
+    data = json.loads(request.body)
+    post = Post.objects.get(pk = data["postID"])
+    content = data["content"]
+
+    comment = Comment(content = content, writer = request.user, post = post)
+    comment.save()
+
+    return HttpResponse(status=200)

@@ -6,7 +6,6 @@ def user_directory_path(instance, filename):
     ext = filename.split('.')[-1]  
     return f'network/users_profile_pictures/{instance.username}.{ext}'  
 
-
 class User(AbstractUser):
     followers = models.ManyToManyField('self', related_name='following', symmetrical=False, blank=True)
     profile_picture = models.ImageField(blank=True, upload_to=user_directory_path)
@@ -15,9 +14,7 @@ class User(AbstractUser):
     def add_follower(self, user):   
         if user == self:
             raise ValidationError("Users cannot follow themselves")
-        
         self.followers.add(user)
-        
 
 class Post(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
@@ -32,12 +29,22 @@ class Post(models.Model):
             dots = ''
         return f"{self.creator.username}: {self.postContent[:8] + dots } at {self.created_at}"
 
-
 class Comment(models.Model):
     content = models.CharField(max_length=120)
-    writer = models.ForeignKey(User, on_delete=models.CASCADE,  related_name="comments")
+    writer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
-    time = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     
-    def __str__(self):
+    def __str__(self):  
         return f"{self.writer}: {self.content}"
+    
+    def serialize(self):
+        return {
+            "id": self.id,
+            "content": self.content,
+            "writer": {
+                "username": self.writer.username,
+                "profile_picture": self.writer.profile_picture.url if self.writer.profile_picture else None
+            },
+            "created_at": self.created_at.strftime("%Y-%m-%d %H:%M:%S")
+        }
