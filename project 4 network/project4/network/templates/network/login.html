@@ -2,43 +2,44 @@
 
 {% block body %}
 
-<div class="d-flex align-items-center py-4">
-        
-    <main class="form-signin m-auto" style="width: 300px!important;">
-      <form action="{% url 'login' %}" method="post">
-        <h1 class="h3 mb-3 fw-normal">Please log in</h1>
-        {% if message %}
-             <h5 class="text-danger">{{ message }}</h5 >
-        {% endif %}
+<div class="flex items-center justify-center min-h-screen bg-gray-900 py-4">
+    <main class="w-full max-w-sm bg-gray-800 rounded-lg shadow-md p-8 border border-gray-700">
+        <form action="{% url 'login' %}" method="post" class="space-y-6">
+            <h1 class="text-2xl font-semibold mb-4 text-center text-blue-400">Please log in</h1>
+            {% if message %}
+                <h5 class="text-red-400 text-center">{{ message }}</h5>
+            {% endif %}
 
-        {% csrf_token %}
-    
-        <div class="form-floating">
-          <input type="text" name="username"  autofocus class="form-control" id="floatingInput" placeholder="username" style="border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;">
-          <label for="floatingInput">Username</label>
-        </div>
-        <div class="form-floating">
-          <input type="password" class="form-control" name="password" id="floatingPassword" placeholder="Password" style="border-top-left-radius: 0;
-    border-top-right-radius: 0;">
-          <label for="floatingPassword">Password</label>
-        </div>
-    
-        <div class="form-check text-start my-3">
-          <input class="form-check-input" type="checkbox" value="remember-me" id="flexCheckDefault">
-          <label class="form-check-label" for="flexCheckDefault">
-            Remember me
-          </label>
-        </div>
-        <button class="btn btn-outline-warning w-100 py-2" type="submit">Log in</button>
+            {% csrf_token %}
 
-        <p class="mt-3 mb-3 text-body-secondary">Don't have an account? <a class="hover-effect" href="{% url 'register' %}">Register here.</a></p>
+            <div>
+                <label for="floatingInput" class="block text-sm font-medium text-gray-300 mb-1">Username</label>
+                <input type="text" name="username" autofocus id="floatingInput" placeholder="Username"
+                    class="block w-full px-3 py-2 border border-gray-700 rounded-t-md bg-gray-900 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700 transition" />
+            </div>
+            <div>
+                <label for="floatingPassword" class="block text-sm font-medium text-gray-300 mb-1">Password</label>
+                <input type="password" name="password" id="floatingPassword" placeholder="Password"
+                    class="block w-full px-3 py-2 border border-gray-700 rounded-b-md bg-gray-900 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700 transition" />
+            </div>
 
-      </form>
+            <div class="flex items-center">
+                <input id="flexCheckDefault" name="remember" type="checkbox"
+                    class="h-4 w-4 text-blue-500 border-gray-700 rounded focus:ring-blue-700 bg-gray-900">
+                <label for="flexCheckDefault" class="ml-2 block text-sm text-gray-200">
+                    Remember me
+                </label>
+            </div>
+            <button type="submit"
+                class="w-full py-2 px-4 border border-blue-700 text-blue-400 rounded hover:bg-blue-700 hover:text-white font-semibold transition">
+                Log in
+            </button>
+            <p class="mt-3 mb-0 text-gray-400 text-center text-sm">
+                Don't have an account?
+                <a class="text-blue-400 hover:underline" href="{% url 'register' %}">Register here.</a>
+            </p>
+        </form>
     </main>
-    
-    </div>
-    
-
+</div>
 
 {% endblock %}

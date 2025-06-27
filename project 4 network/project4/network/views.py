@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect, HttpResponseNotFound, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 from .models import User, Post, Comment
-from .forms import PostForm
+from .forms import PostForm, RegisterForm
 import json
 from .util import get_page_obj
 
@@ -43,29 +43,37 @@ def logout_view(request):
 
 def register(request):
     if request.method == "POST":
-        username = request.POST["username"]
-        email = request.POST["email"]
-
-        # Ensure password matches confirmation
+        form = RegisterForm(request.POST, request.FILES)
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
         if password != confirmation:
             return render(
-                request, "network/register.html", {"message": "Passwords must match."}
+                request, "network/register.html", {"form": form, "message": "Passwords must match."}
             )
-
-        # Attempt to create new user
-        try:
-            user = User.objects.create_user(username, email, password)
-            user.save()
-        except IntegrityError:
-            return render(
-                request, "network/register.html", {"message": "Username already taken."}
-            )
-        login(request, user)
-        return HttpResponseRedirect(reverse("index"))
+        if form.is_valid():
+            try:
+                user = User.objects.create_user(
+                    username=form.cleaned_data["username"],
+                    email=form.cleaned_data["email"],
+                    password=password
+                )
+                # Optional fields
+                user.bio = form.cleaned_data.get("bio", "")
+                profile_picture = form.cleaned_data.get("profile_picture")
+                if profile_picture:
+                    user.profile_picture = profile_picture
+                user.save()
+            except IntegrityError:
+                return render(
+                    request, "network/register.html", {"form": form, "message": "Username already taken."}
+                )
+            login(request, user)
+            return HttpResponseRedirect(reverse("index"))
+        else:
+            return render(request, "network/register.html", {"form": form})
     else:
-        return render(request, "network/register.html")
+        form = RegisterForm()
+        return render(request, "network/register.html", {"form": form})
 
 @login_required
 def create_post(request):
